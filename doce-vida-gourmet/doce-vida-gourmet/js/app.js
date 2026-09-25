@@ -170,25 +170,34 @@ function renderSlots(){
 
 $("#encForm").addEventListener("submit",e=>{
   e.preventDefault();
-  const nome=$("#nome").value.trim(), fone=$("#fone").value.replace(/\D/g,"");
-  $("#errNome").hidden=!!nome; $("#errFone").hidden=fone.length>=10; $("#errData").hidden=!!(dataSel&&horaSel);
-  const bad=[!nome&&"#nome",fone.length<10&&"#fone",!(dataSel&&horaSel)&&"#cal"].find(Boolean);
+  const nome=$("#nome").value.trim(), fone=$("#fone").value.replace(/\D/g,""), end=$("#encEnd").value.trim();
+  $("#errNome").hidden=!!nome; $("#errFone").hidden=fone.length>=10; $("#errData").hidden=!!(dataSel&&horaSel); $("#errEnd").hidden=!entregaE||!!end;
+  const bad=[!(dataSel&&horaSel)&&"#cal",entregaE&&!end&&"#encEnd",!nome&&"#nome",fone.length<10&&"#fone"].find(Boolean);
   if(bad){document.querySelector(bad).scrollIntoView({behavior:"smooth",block:"center"});return;}
   const {lines}=calc(); const T=TIPOS.find(t=>t.id===tipo);
-  let m=`Olá, Doce Vida! 🎂\nQuero agendar uma *ENCOMENDA*:\n\n*${T.nome}*\n`;
-  lines.forEach(([a,b])=>m+=`• ${a}: ${b}\n`);
-  m+=`• Ocasião: ${$("#ocasiao").value}\n`;
+  const dataLonga=dataSel.toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"long"});
+  let m=`Olá, Doce Vida! 🎂\nGostaria de agendar uma encomenda pelo site.\n\n`;
+  m+=`*PEDIDO: ${T.nome.toUpperCase()}*\n`;
+  lines.filter(([a])=>a!=="Receber"&&a!=="Data").forEach(([a,b])=>m+=`• ${a}: ${b}\n`);
+  m+=`\n*DATA E ENTREGA*\n• Data: ${dataLonga}\n• Horário: ${horaSel}\n• ${entregaE?"Entrega no endereço: "+end:"Retirada no ateliê"}\n`;
+  m+=`\n*FESTA*\n• Ocasião: ${$("#ocasiao").value}\n`;
   if($("#topo").value.trim()) m+=`• Frase no topo: ${$("#topo").value.trim()}\n`;
-  if($("#obs").value.trim()) m+=`• Observações: ${$("#obs").value.trim()}\n`;
-  if(entregaE) m+=`• Endereço: ${$("#encEnd").value.trim()||"(informar)"}\n`;
-  m+=`\nGostaria de receber o orçamento.\n\nNome: ${nome}\nWhatsApp: ${$("#fone").value.trim()}`;
+  if($("#obs").value.trim()) m+=`• Tema e observações: ${$("#obs").value.trim()}\n`;
+  m+=`\n*CLIENTE*\n• Nome: ${nome}\n• WhatsApp: ${$("#fone").value.trim()}\n`;
+  m+=`\nAguardo o orçamento e a confirmação da data. Desde já, agradeço! 💕`;
   showMsg(m,"Encomenda agendada");
 });
 
 /* ---------- Modal / WhatsApp ---------- */
 function showMsg(m,title){
   $("#mTitle").textContent=title; $("#mMsg").textContent=m;
-  $("#mZap").href=`https://wa.me/${ZAP}?text=${encodeURIComponent(m)}`;
+  const url=`https://wa.me/${ZAP}?text=${encodeURIComponent(m)}`;
+  $("#mZap").href=url;
+  // Abre o WhatsApp direto; o modal fica como plano B se o navegador bloquear.
+  const w=window.open(url,"_blank"); if(w) try{w.opener=null;}catch(_){}
+  $("#mHint").textContent = w===null
+    ? "Toque em \"Abrir WhatsApp\" para enviar a mensagem abaixo. Se não abrir, copie o texto e envie manualmente."
+    : "Abrimos o WhatsApp com a sua mensagem pronta. É só tocar em enviar por lá. Se não abriu, use o botão abaixo.";
   $("#modal").hidden=false; $("#mZap").focus();
 }
 $("#mClose").onclick=()=>$("#modal").hidden=true;

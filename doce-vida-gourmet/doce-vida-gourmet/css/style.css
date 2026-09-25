@@ -313,3 +313,36 @@ html{overflow-x:clip}
 .lines div{border-bottom:1px dashed var(--line);padding-bottom:7px}
 .lines span:first-child{color:var(--ink-2)}
 .lines span:last-child{color:var(--ink);font-weight:600}
+
+/* ---------- Hero em destaque: fundo chocolate ---------- */
+.hero{position:relative;padding-block:64px 88px}
+.hero::before{content:"";position:absolute;z-index:-1;top:0;bottom:0;left:calc(50% - 50vw);right:calc(50% - 50vw);
+  background:
+    radial-gradient(circle at 12% 18%,rgba(226,193,140,.22) 0 3px,transparent 60px),
+    radial-gradient(circle at 44% 82%,rgba(246,198,203,.16) 0 4px,transparent 90px),
+    radial-gradient(circle at 60% 12%,rgba(226,193,140,.18) 0 3px,transparent 70px),
+    radial-gradient(circle at 92% 70%,rgba(226,193,140,.22) 0 5px,transparent 110px),
+    radial-gradient(ellipse 700px 520px at 78% 45%,rgba(197,154,90,.28),transparent 70%),
+    radial-gradient(ellipse 600px 500px at 8% 100%,rgba(185,79,105,.18),transparent 70%),
+    linear-gradient(135deg,#24120C 0%,#3A1D13 45%,#4A2618 70%,#2A150E 100%)}
+.hero .eyebrow{color:var(--ouro-2)}
+.hero .hello{color:#F4B6C4}
+.hero h1{color:#FFF6EE}
+.hero h1 em{color:#F4A7B9}
+.hero .lead{color:#EADBD2}
+.hero .btn-dark{background:#F6C9D1;color:#2A120B}
+.hero .btn-rosa{background:transparent;color:#FFF6EE;box-shadow:inset 0 0 0 1.5px rgba(255,246,238,.55)}
+.hero .btn-rosa:hover{background:rgba(255,246,238,.08)}
+.hero .facts{border-top-color:rgba(255,246,238,.16);color:#D9C7BD}
+.hero .facts strong{color:#FFF6EE}
+.hero .muted{color:#D9C7BD}
+.hero-img .tag .muted{color:var(--ink-2)}
+.hero-img .main{border-color:rgba(255,255,255,.9);box-shadow:0 30px 60px -24px rgba(0,0,0,.6)}
+.hero-img::before{border-color:rgba(226,193,140,.55)}
+.hero :focus-visible{outline-color:var(--ouro-2)}
+.cats{position:relative;z-index:1;margin-top:-40px;box-shadow:0 20px 40px -28px rgba(42,21,14,.45)}
+@media (max-width:860px){.hero{padding-block:36px 76px}}
+
+/* Hero: foto inteira, sem moldura */
+.hero-img::before{display:none}
+.hero-img .main{aspect-ratio:auto;height:auto;border:0;border-radius:24px;object-fit:contain}
